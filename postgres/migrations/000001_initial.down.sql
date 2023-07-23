@@ -1,0 +1,3 @@
+DROP TABLE projects;
+DROP TABLE users;
+DROP EXTENSION IF EXISTS pgcrypto;

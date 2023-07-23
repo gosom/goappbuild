@@ -1,0 +1,355 @@
+basePath: /
+consumes:
+- application/json
+definitions:
+  api.CreateCollectionRequest:
+    properties:
+      name:
+        type: string
+      projectID:
+        type: string
+    type: object
+  api.CreateCollectionResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  api.CreatePayload:
+    additionalProperties:
+      type: any
+    type: object
+  api.CreateProjectRequest:
+    properties:
+      name:
+        type: string
+      user_id:
+        type: string
+    type: object
+  api.CreateProjectResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  api.HealthResponse:
+    properties:
+      status:
+        description: Status is the status of the service.
+        type: string
+    type: object
+  api.RegisterUserRequest:
+    type: object
+  api.RegisterUserResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  restapi.ErrorResponse:
+    properties:
+      error_msg:
+        description: ErrorMsg is the error message.
+        type: string
+      status_code:
+        description: StatusCode is the status code.
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: Giorgos Komninos
+    url: http://blog.gkomninos.com
+  description: This is the API for the GoAppBuild application.
+  title: GoAppBuild API
+  version: 0.0.1
+paths:
+  /api/v1/collections:
+    post:
+      consumes:
+      - application/json
+      description: Create a collection
+      parameters:
+      - description: The request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateCollectionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.CreateCollectionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+      summary: Create a collection
+      tags:
+      - collections
+  /api/v1/health:
+    get:
+      consumes:
+      - application/json
+      description: Get the health of the service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.HealthResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+      summary: Get the health of the service
+      tags:
+      - health
+  /api/v1/projects:
+    post:
+      consumes:
+      - application/json
+      description: Create a project
+      parameters:
+      - description: The request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateProjectRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.CreateProjectResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+      summary: Create a project
+      tags:
+      - projects
+  /api/v1/queries/{collectionName}:
+    post:
+      consumes:
+      - application/json
+      description: Create a document
+      parameters:
+      - description: Collection Name
+        in: path
+        name: collectionName
+        required: true
+        type: string
+      - description: Project ID
+        in: header
+        name: projectID
+        required: true
+        type: string
+      - description: Document
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreatePayload'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+      summary: Create a document
+      tags:
+      - Queries
+  /api/v1/queries/{collectionName}/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a document
+      parameters:
+      - description: Collection Name
+        in: path
+        name: collectionName
+        required: true
+        type: string
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Project ID
+        in: header
+        name: projectID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+      summary: Delete a document
+      tags:
+      - Queries
+    get:
+      consumes:
+      - application/json
+      description: Get a document
+      parameters:
+      - description: Collection Name
+        in: path
+        name: collectionName
+        required: true
+        type: string
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Project ID
+        in: header
+        name: projectID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+      summary: Get a document
+      tags:
+      - Queries
+    patch:
+      consumes:
+      - application/json
+      description: Update a document
+      parameters:
+      - description: Collection Name
+        in: path
+        name: collectionName
+        required: true
+        type: string
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Project ID
+        in: header
+        name: projectID
+        required: true
+        type: string
+      - description: Document
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreatePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+      summary: Update a document
+      tags:
+      - Queries
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      description: Register a user
+      parameters:
+      - description: The request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.RegisterUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.RegisterUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/restapi.ErrorResponse'
+      summary: Register a user
+      tags:
+      - users
+produces:
+- application/json
+swagger: "2.0"
